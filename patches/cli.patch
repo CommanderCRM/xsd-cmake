@@ -1,0 +1,38 @@
+--- ./cli/traversal/elements.hxx
++++ ./cli/traversal/elements.hxx
+@@ -131,7 +131,7 @@
+     virtual void
+     names (T& s, edge_dispatcher& d)
+     {
+-      iterate_and_dispatch (s.names_begin (), s.names_end (), d);
++      edge_dispatcher::iterate_and_dispatch (s.names_begin (), s.names_end (), d);
+     }
+   };
+ 
+
+--- ./makefile
++++ ./makefile
+@@ -15,7 +15,6 @@
+ #
+ $(default):           \
+ $(out_base)/cli/      \
+-$(out_base)/doc/      \
+ $(out_base)/tests/    \
+ $(out_base)/examples/
+ 
+@@ -26,7 +25,6 @@
+ # Install.
+ #
+ $(install): $(out_base)/cli/.install     \
+-            $(out_base)/doc/.install     \
+ 	    $(out_base)/examples/.install
+ 	$(call install-data,$(src_base)/LICENSE,$(install_doc_dir)/cli/LICENSE)
+ 	$(call install-data,$(src_base)/NEWS,$(install_doc_dir)/cli/NEWS)
+@@ -43,6 +41,5 @@
+ $(call include,$(bld_root)/install.make)
+ 
+ $(call import,$(src_base)/cli/makefile)
+-$(call import,$(src_base)/doc/makefile)
+ $(call import,$(src_base)/tests/makefile)
+ $(call import,$(src_base)/examples/makefile)
+\ No newline at end of file
