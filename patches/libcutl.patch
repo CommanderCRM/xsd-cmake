@@ -1,5 +1,5 @@
---- ./cutl/shared-ptr/base.cxx	2024-12-07 23:46:00.303231096 +0700
-+++ ./cutl/shared-ptr/base.cxx.2	2024-12-07 23:49:56.165297859 +0700
+--- ./cutl/shared-ptr/base.cxx
++++ ./cutl/shared-ptr/base.cxx
 @@ -16,7 +16,7 @@
  namespace cutl
  {
@@ -27,8 +27,8 @@
  {
    // This version of operator delete is only called when the c-tor
    // fails. In this case there is no object and we can just free the
---- ./cutl/shared-ptr/base.ixx	2024-12-07 23:46:00.303231096 +0700
-+++ ./cutl/shared-ptr/base.ixx.2	2024-12-07 23:51:02.785887193 +0700
+--- ./cutl/shared-ptr/base.ixx
++++ ./cutl/shared-ptr/base.ixx
 @@ -59,19 +59,19 @@
    }
  
@@ -52,8 +52,8 @@
    {
      ::operator delete (p);
    }
---- ./cutl/shared-ptr/base.hxx	2024-12-07 23:46:00.303231096 +0700
-+++ ./cutl/shared-ptr/base.hxx.2	2024-12-07 23:51:54.816345831 +0700
+--- ./cutl/shared-ptr/base.hxx
++++ ./cutl/shared-ptr/base.hxx
 @@ -31,17 +31,17 @@
  extern LIBCUTL_EXPORT cutl::share exclusive;
  
