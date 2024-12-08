@@ -10,12 +10,16 @@ find_package(Patch)
 ProcessorCount(N)
 
 # Dependency options
-set(BUILD_GIT_REPO_LINK         "git://git.codesynthesis.com/build/build.git")
-set(BUILD_GIT_REPO_TAG          "0.3.10")
-set(LIBCUTL_GIT_REPO_LINK       "git://git.codesynthesis.com/libcutl/libcutl.git")
-set(LIBCUTL_GIT_REPO_TAG        "1.10.0")
-set(CLI_GIT_REPO_LINK           "git://git.codesynthesis.com/cli/cli.git")
-set(CLI_GIT_REPO_TAG            "1.1.0")
+set(BUILD_GIT_REPO_LINK          "git://git.codesynthesis.com/build/build.git")
+set(BUILD_GIT_REPO_TAG           "0.3.10")
+set(LIBCUTL_GIT_REPO_LINK        "git://git.codesynthesis.com/libcutl/libcutl.git")
+set(LIBCUTL_GIT_REPO_TAG         "1.10.0")
+set(CLI_GIT_REPO_LINK            "git://git.codesynthesis.com/cli/cli.git")
+set(CLI_GIT_REPO_TAG             "1.1.0")
+set(XERCES_C_REPO_LINK           "https://github.com/apache/xerces-c.git")
+set(XERCES_C_GIT_REPO_TAG        "v3.0.0")
+set(LIBXSD_FRONTEND_REPO_LINK    "git://git.codesynthesis.com/libxsd-frontend/libxsd-frontend.git")
+set(LIBXSD_FRONTEND_GIT_REPO_TAG "2.0.0")
 
 # Directory tree options
 set(BUILD_SYSTEM_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/build_0.3")
@@ -31,6 +35,7 @@ ExternalProject_Add(build
   INSTALL_COMMAND   ${MAKE_EXE} install install_prefix=${BUILD_SYSTEM_INSTALL_PREFIX}
 )
 
+# Note: build system is used via makeflags in BUILD_COMMAND.
 ExternalProject_Add(libcutl
   GIT_REPOSITORY    ${LIBCUTL_GIT_REPO_LINK}
   GIT_TAG           ${LIBCUTL_GIT_REPO_TAG}
@@ -56,4 +61,25 @@ ExternalProject_Add(cli
   BUILD_COMMAND     ${CMAKE_COMMAND} -E env MAKEFLAGS="-I ${BUILD_SYSTEM_INSTALL_PREFIX}/include" ${SCRIPT_DIR}/cli.sh ${N} ${CMAKE_CURRENT_LIST_DIR}/libcutl-prefix/src/libcutl
   INSTALL_COMMAND   ${MAKE_EXE} install install_prefix=${CMAKE_CURRENT_LIST_DIR}/cli
   DEPENDS           build libcutl
+)
+
+ExternalProject_Add(xerces-c
+  GIT_REPOSITORY    ${XERCES_C_REPO_LINK}
+  GIT_TAG           ${XERCES_C_GIT_REPO_TAG}
+  BUILD_IN_SOURCE   TRUE
+  CONFIGURE_COMMAND autoreconf -si && "<SOURCE_DIR>/configure" --disable-dependency-tracking --enable-static --disable-shared --disable-network --without-icu --prefix=${CMAKE_CURRENT_LIST_DIR}/xerces-c
+  BUILD_COMMAND     ${MAKE_EXE} -j${N}
+  INSTALL_COMMAND   ${MAKE_EXE} install
+)
+
+ExternalProject_Add(libxsd-frontend
+  GIT_REPOSITORY    ${LIBXSD_FRONTEND_REPO_LINK}
+  GIT_TAG           ${LIBXSD_FRONTEND_GIT_REPO_TAG}
+  BUILD_IN_SOURCE   TRUE
+  CONFIGURE_COMMAND ""
+  # Handles interactive inputs for custom configure, takes libcutl and xerces-c root
+  BUILD_COMMAND     ${CMAKE_COMMAND} -E env MAKEFLAGS="-I ${BUILD_SYSTEM_INSTALL_PREFIX}/include" ${SCRIPT_DIR}/libxsd-frontend.sh ${N} ${CMAKE_CURRENT_LIST_DIR}/libcutl-prefix/src/libcutl ${CMAKE_CURRENT_LIST_DIR}/xerces-c-prefix/src/xerces-c
+  # Only lib is copied, makefile doesn't have install target
+  INSTALL_COMMAND   ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_LIST_DIR}/libxsd-frontend && ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/libxsd-frontend-prefix/src/libxsd-frontend/xsd-frontend/libxsd-frontend.a ${CMAKE_CURRENT_LIST_DIR}/libxsd-frontend
+  DEPENDS           build libcutl xerces-c
 )
