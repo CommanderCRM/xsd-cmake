@@ -1,0 +1,36 @@
+--- makefile
++++ makefile	
+@@ -14,10 +14,7 @@
+ 
+ .PHONY: $(dist-pre)
+ 
+-$(default): $(out_base)/xsd/      \
+-            $(out_base)/tests/    \
+-            $(out_base)/examples/ \
+-            $(out_base)/doc/
++$(default): $(out_base)/xsd/      
+ 
+ # Test.
+ #
+@@ -27,9 +24,7 @@
+ # Install.
+ #
+ $(install): $(out_base)/xsd/.install           \
+-            $(out_base)/libxsd/.install        \
+-	    $(out_base)/examples/.install      \
+-            $(out_base)/doc/.install
++            $(out_base)/libxsd/.install        
+ 	$(call install-dir,$(src_base)/dist/examples/build,$(install_doc_dir)/xsd/examples/build)
+ 	$(call install-dir,$(src_base)/dist/examples/cxx,$(install_doc_dir)/xsd/examples/cxx,-name makefile)
+ 	$(call install-data,$(src_base)/dist/examples/makefile,$(install_doc_dir)/xsd/examples/makefile)
+@@ -43,9 +38,7 @@
+ # Dist.
+ #
+ $(dist): $(out_base)/xsd/.dist           \
+-         $(out_base)/libxsd/.dist        \
+-         $(out_base)/examples/.dist      \
+-         $(out_base)/doc/.dist
++         $(out_base)/libxsd/.dist        
+ 	$(call install-dir,$(src_base)/dist/examples/build,$(dist_prefix)/examples/build)
+ 	$(call install-dir,$(src_base)/dist/examples/cxx,$(dist_prefix)/examples/cxx,-name makefile)
+ 	$(call install-data,$(src_base)/dist/examples/makefile,$(dist_prefix)/examples/makefile)
