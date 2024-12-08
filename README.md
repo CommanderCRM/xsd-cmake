@@ -1,5 +1,6 @@
 # xsd-cmake
 XSD CMake is an adaptation of CMake build system for Code Synthesis' XSD code generator and its various dependencies.
+It is using ExternalProject as a main driver to handle dependencies.
 
 ## Prerequisites
 * cmake >= 3.10
